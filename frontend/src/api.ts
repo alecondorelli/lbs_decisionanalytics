@@ -1,4 +1,4 @@
-import { OptimizeRequest, OptimizeResult } from './types'
+import { OptimizeRequest, OptimizeResult, EtfPoint } from './types'
 
 const API_BASE = '/api'
 
@@ -17,4 +17,13 @@ export async function optimizePortfolio(req: OptimizeRequest): Promise<OptimizeR
     throw new Error(detail)
   }
   return res.json()
+}
+
+export async function fetchEtfScatter(): Promise<EtfPoint[]> {
+  const res = await fetch(`${API_BASE}/etf-scatter`)
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ETF scatter data: ${res.status}`)
+  }
+  const data = await res.json()
+  return data.etfs
 }

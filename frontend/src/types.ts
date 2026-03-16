@@ -14,6 +14,27 @@ export interface Benchmark {
   sharpe_ratio: number
 }
 
+export interface RiskContributor {
+  ticker: string
+  weight: number
+  volatility: number
+}
+
+export interface PortfolioAnalysis {
+  asset_class_breakdown: Record<string, number>
+  top_risk_contributors: RiskContributor[]
+  defensive_allocation: number
+  concentration: number
+}
+
+export interface BacktestData {
+  dates: string[]
+  portfolio: number[]
+  voo: number[]
+  bnd: number[]
+  blend_60_40: number[]
+}
+
 export interface OptimizeResult {
   expected_return: number
   volatility: number
@@ -23,6 +44,15 @@ export interface OptimizeResult {
   benchmarks: Benchmark[]
   budget: number
   explanation: string
+  portfolio_analysis: PortfolioAnalysis
+  backtest: BacktestData
+}
+
+export interface EtfPoint {
+  ticker: string
+  asset_class: string
+  annual_return: number
+  annual_volatility: number
 }
 
 export interface OptimizeRequest {

@@ -2,8 +2,14 @@ import { useState } from 'react'
 import { ASSET_CLASSES, ASSET_CLASS_COLORS, OptimizeResult } from '../types'
 import { optimizePortfolio } from '../api'
 
+interface LoadingContext {
+  numTickers: number
+  numClasses: number
+  riskTolerance: string
+}
+
 interface Props {
-  onLoading: () => void
+  onLoading: (ctx: LoadingContext) => void
   onResult: (r: OptimizeResult) => void
   onError: (e: string) => void
   error: string | null
@@ -32,7 +38,16 @@ export default function InputForm({ onLoading, onResult, onError, error }: Props
       onError('Please select at least one asset class.')
       return
     }
-    onLoading()
+    // Count total tickers across selected classes
+    const totalTickers = ASSET_CLASSES
+      .filter((c) => selectedClasses.has(c.key))
+      .reduce((sum, c) => sum + c.tickers.length, 0)
+
+    onLoading({
+      numTickers: totalTickers,
+      numClasses: selectedClasses.size,
+      riskTolerance,
+    })
     try {
       const result = await optimizePortfolio({
         budget,
